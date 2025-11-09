@@ -1,0 +1,80 @@
+# =========================
+# IDEs
+# =========================
+# VS Code
+.vscode/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse
+*.tmp
+*.bak
+*.swp
+.metadata
+bin/
+
+# =========================
+# Maven
+# =========================
+/target/
+/!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+dependency-reduced-pom.xml
+release.properties
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+
+# Ignore Maven repository folder inside .mvn
+.mvn/repository/
+
+# =========================
+# Spring Boot
+# =========================
+/spring.log
+*.pid
+*.backup
+*.tmp
+*.swp
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.*
+.env.local
+.env.*.local
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+*.bak
+*.swp
+*.swo
+
+# =========================
+# H2 database files
+# =========================
+*.mv.db
+*.trace.db
+
+# =========================
+# Other
+# =========================
+*.class
+*.jar
+*.war
