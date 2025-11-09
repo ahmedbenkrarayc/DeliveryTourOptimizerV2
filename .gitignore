@@ -51,6 +51,9 @@ pom.xml.next
 .env.local
 .env.*.local
 
+# Exclude .example variants
+!*.example
+
 # =========================
 # Logs
 # =========================
