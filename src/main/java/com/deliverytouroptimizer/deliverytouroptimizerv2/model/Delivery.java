@@ -2,6 +2,7 @@ package com.deliverytouroptimizer.deliverytouroptimizerv2.model;
 
 import com.deliverytouroptimizer.deliverytouroptimizerv2.model.enums.DeliveryStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -53,4 +54,8 @@ public class Delivery {
     @JoinColumn(name = "customer_id")
     @JsonBackReference
     private Customer customer;
+
+    @OneToOne(mappedBy = "delivery", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private DeliveryHistory deliveryHistory;
 }

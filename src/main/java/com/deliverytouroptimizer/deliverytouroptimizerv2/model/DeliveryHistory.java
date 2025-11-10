@@ -1,9 +1,7 @@
 package com.deliverytouroptimizer.deliverytouroptimizerv2.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
@@ -32,4 +30,9 @@ public class DeliveryHistory {
 
     @NotNull(message = "Actual time is required")
     private LocalTime actualTime;
+
+    @OneToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "delivery_id")
+    @JsonBackReference
+    private Delivery delivery;
 }
