@@ -34,4 +34,8 @@ public class Customer {
 
     @Pattern(regexp = "^\\+?[0-9]{7,15}$", message = "Phone number must be valid")
     private String phone;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Delivery> deliveries;
 }

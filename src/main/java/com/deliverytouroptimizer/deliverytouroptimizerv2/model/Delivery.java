@@ -48,4 +48,9 @@ public class Delivery {
     @JoinColumn(name = "tour_id")
     @JsonBackReference
     private Tour tour;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    @JsonBackReference
+    private Customer customer;
 }
