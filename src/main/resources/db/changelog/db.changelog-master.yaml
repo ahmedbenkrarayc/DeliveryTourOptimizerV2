@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - include:
+      file: /src/main/resources/db/changelog/001-create-warehouse.yaml
+  - include:
+      file: /src/main/resources/db/changelog/002-create-vehicle.yaml
+  - include:
+      file: /src/main/resources/db/changelog/003-create-tour.yaml
+  - include:
+      file: /src/main/resources/db/changelog/004-create-delivery.yaml
+  - include:
+      file: /src/main/resources/db/changelog/005-create-customer.yaml
+  - include:
+      file: /src/main/resources/db/changelog/006-create-deliveryhistory.yaml
+  - include:
+      file: /src/main/resources/db/changelog/007-add-customerid-to-delivery.yaml
