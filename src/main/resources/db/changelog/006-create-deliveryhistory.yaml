@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006
+      author: AhmedBenkrara
+      changes:
+        - createTable:
+            tableName: deliveryhistory
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: deliveryDate
+                  type: Date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: plannedTime
+                  type: TIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actualTime
+                  type: TIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: delivery_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: deliveryhistory
+            baseColumnNames: delivery_id
+            constraintName: fk_deliveryhistory_delivery
+            referencedTableName: delivery
+            referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: deliveryhistory
+            constraintName: fk_deliveryhistory_delivery
+        - dropTable:
+            tableName: deliveryhistory
