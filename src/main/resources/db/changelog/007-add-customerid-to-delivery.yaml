@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007
+      author: AhmedBenkrara
+      changes:
+        - addColumn:
+            tableName: delivery
+            columns:
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: delivery
+            baseColumnNames: customer_id
+            constraintName: fk_delivery_customer
+            referencedTableName: customer
+            referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: delivery
+            constraintName: fk_delivery_customer
