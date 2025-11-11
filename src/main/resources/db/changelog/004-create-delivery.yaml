@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004
+      author: AhmedBenkrara
+      changes:
+        - createTable:
+            tableName: delivery
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: address
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: latitude
+                  type: DOUBLE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: longitude
+                  type: DOUBLE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: weight
+                  type: DOUBLE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: volume
+                  type: DOUBLE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: preferredTimeSlot
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: status
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tour_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: delivery
+            baseColumnNames: tour_id
+            constraintName: fk_delivery_tour
+            referencedTableName: tour
+            referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: delivery
+            constraintName: fk_delivery_tour
+        - dropTable:
+            tableName: delivery
