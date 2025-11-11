@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002
+      author: AhmedBenkrara
+      changes:
+        - createTable:
+            tableName: vehicle
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: registrationNumber
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+      rollback:
+        - dropTable:
+            tableName: vehicle
