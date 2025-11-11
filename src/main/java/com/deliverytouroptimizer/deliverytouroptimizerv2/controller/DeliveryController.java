@@ -40,7 +40,7 @@ public class DeliveryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeliveryResponse> delete(@PathVariable Long id){
-        deliveryService.getById(id);
+        deliveryService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
