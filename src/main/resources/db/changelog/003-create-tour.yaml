@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003
+      author: AhmedBenkrara
+      changes:
+        - createTable:
+            tableName: tour
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vehicle_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: warehouse_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: tour
+            baseColumnNames: vehicle_id
+            constraintName: fk_tour_vehicle
+            referencedTableName: vehicle
+            referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: tour
+            baseColumnNames: warehouse_id
+            constraintName: fk_warehouse_warehouse
+            referencedTableName: warehouse
+            referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: tour
+            constraintName: fk_tour_vehicle
+        - dropForeignKeyConstraint:
+            baseTableName: tour
+            constraintName: fk_warehouse_warehouse
+        - dropTable:
+            tableName: tour
