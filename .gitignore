@@ -81,3 +81,5 @@ Thumbs.db
 *.class
 *.jar
 *.war
+
+liquibase.properties
