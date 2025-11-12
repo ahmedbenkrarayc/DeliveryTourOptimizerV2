@@ -12,6 +12,8 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.model.Tour;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.model.Warehouse;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.optimizer.TourOptimizer;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.repository.TourRepository;
+import com.deliverytouroptimizer.deliverytouroptimizerv2.repository.VehicleRepository;
+import com.deliverytouroptimizer.deliverytouroptimizerv2.repository.WarehouseRepository;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.TourService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,9 +30,12 @@ public class TourServiceImpl implements TourService {
     private final TourMapper tourMapper;
     private final DeliveryMapper deliveryMapper;
     private final TourOptimizer tourOptimizer;
+    private final WarehouseRepository warehouseRepository;
+    private final VehicleRepository vehicleRepository;
 
     @Override
     public TourResponse create(CreateTourRequest request) {
+        validateParentExistence(request.warehouseId(), request.vehicleId());
         Tour tour = tourMapper.toEntity(request);
         Tour saved = tourRepository.save(tour);
         return tourMapper.toResponse(saved);
@@ -40,7 +45,7 @@ public class TourServiceImpl implements TourService {
     public TourResponse update(Long id, UpdateTourRequest request) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Tour not found: "+ id));
-
+        validateParentExistence(request.warehouseId(), request.vehicleId());
         tourMapper.updateEntityFromDto(request, tour);
         return tourMapper.toResponse(tour);
     }
@@ -83,4 +88,10 @@ public class TourServiceImpl implements TourService {
         return optimized;
     }
 
+    private void validateParentExistence(Long warehouseId, Long vehicleId){
+        if(!warehouseRepository.existsById(warehouseId))
+            throw new ResourceNotFoundException("Warehouse not found id : " + warehouseId);
+        if(!vehicleRepository.existsById(vehicleId))
+            throw new ResourceNotFoundException("Vehicle not found id : " + vehicleId);
+    }
 }
