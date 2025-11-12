@@ -22,6 +22,8 @@ public record UpdateDeliveryRequest(
         @NotNull(message = "Delivery status is required")
         DeliveryStatus status,
         @NotNull(message = "Tour ID is required")
-        Long tourId
+        Long tourId,
+        @NotNull(message = "Customer ID is required")
+        Long customerId
 ) {
 }

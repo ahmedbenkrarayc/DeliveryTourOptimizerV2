@@ -1,6 +1,7 @@
 package com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.delivery;
 
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.tour.TourResponse;
+import com.deliverytouroptimizer.deliverytouroptimizerv2.model.Customer;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.model.enums.DeliveryStatus;
 
 public record DeliveryResponse(
@@ -12,6 +13,7 @@ public record DeliveryResponse(
         double volume,
         String preferredTimeSlot,
         DeliveryStatus status,
-        TourResponse tour
+        TourResponse tour,
+        Customer customer
 ) {
 }
