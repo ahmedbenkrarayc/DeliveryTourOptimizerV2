@@ -3,6 +3,9 @@ package com.deliverytouroptimizer.deliverytouroptimizerv2.dto.request.delivery;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.model.enums.DeliveryStatus;
 import jakarta.validation.constraints.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public record UpdateDeliveryRequest(
         @NotBlank(message = "Delivery address cannot be blank")
         String address,
@@ -24,6 +27,10 @@ public record UpdateDeliveryRequest(
         @NotNull(message = "Tour ID is required")
         Long tourId,
         @NotNull(message = "Customer ID is required")
-        Long customerId
+        Long customerId,
+        //history
+        LocalDate deliveryDate,
+        LocalTime plannedTime,
+        LocalTime actualTime
 ) {
 }
