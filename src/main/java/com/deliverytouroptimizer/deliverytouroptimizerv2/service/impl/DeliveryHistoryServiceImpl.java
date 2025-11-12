@@ -6,6 +6,7 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.exception.ResourceNotFo
 import com.deliverytouroptimizer.deliverytouroptimizerv2.mapper.DeliveryHistoryMapper;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.model.DeliveryHistory;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.repository.DeliveryHistoryRepository;
+import com.deliverytouroptimizer.deliverytouroptimizerv2.repository.DeliveryRepository;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.DeliveryHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,11 @@ import java.util.stream.Collectors;
 public class DeliveryHistoryServiceImpl implements DeliveryHistoryService {
     private final DeliveryHistoryRepository deliveryHistoryRepository;
     private final DeliveryHistoryMapper deliveryHistoryMapper;
+    private final DeliveryRepository deliveryRepository;
 
     @Override
     public DeliveryHistoryResponse create(CreateDeliveryHistoryRequest request) {
+        validateParentExistence(request.deliveryId());
         DeliveryHistory history = deliveryHistoryMapper.toEntity(request);
         DeliveryHistory saved = deliveryHistoryRepository.save(history);
         return deliveryHistoryMapper.toResponse(saved);
@@ -48,5 +51,10 @@ public class DeliveryHistoryServiceImpl implements DeliveryHistoryService {
                 .stream()
                 .map(deliveryHistoryMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    private void validateParentExistence(Long deliveryId){
+        if(!deliveryRepository.existsById(deliveryId))
+            throw new ResourceNotFoundException("Delivery not found id : " + deliveryId);
     }
 }
