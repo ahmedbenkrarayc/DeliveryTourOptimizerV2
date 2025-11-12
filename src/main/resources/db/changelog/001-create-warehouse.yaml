@@ -34,12 +34,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: openingTime
+                  name: openingtime
                   type: TIME
                   constraints:
                     nullable: false
               - column:
-                  name: closingTime
+                  name: closingtime
                   type: TIME
                   constraints:
                     nullable: false

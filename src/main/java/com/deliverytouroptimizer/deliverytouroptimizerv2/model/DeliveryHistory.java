@@ -17,18 +17,22 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "deliveryhistory")
 public class DeliveryHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull(message = "Delivery date is required")
     @PastOrPresent(message = "Delivery date cannot be in the future")
+    @Column(name = "deliverydate")
     private LocalDate deliveryDate;
 
     @NotNull(message = "Planned time is required")
+    @Column(name = "plannedtime")
     private LocalTime plannedTime;
 
     @NotNull(message = "Actual time is required")
+    @Column(name = "actualtime")
     private LocalTime actualTime;
 
     @OneToOne(fetch= FetchType.LAZY)

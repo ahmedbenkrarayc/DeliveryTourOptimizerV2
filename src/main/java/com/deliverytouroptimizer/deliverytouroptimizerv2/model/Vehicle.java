@@ -28,7 +28,7 @@ public class Vehicle {
     private VehicleType type;
 
     @NotBlank(message = "Registration number is required")
-    @Column(unique = true, nullable = false)
+    @Column(name = "registrationnumber", unique = true, nullable = false)
     private String registrationNumber;
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)

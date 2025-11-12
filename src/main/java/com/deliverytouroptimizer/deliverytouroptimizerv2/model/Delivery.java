@@ -39,6 +39,7 @@ public class Delivery {
     @Min(value = 0, message = "Volume must be zero or positive")
     private double volume;
 
+    @Column(name = "preferredtimeslot")
     private String preferredTimeSlot;
 
     @NotNull(message = "Delivery status is required")

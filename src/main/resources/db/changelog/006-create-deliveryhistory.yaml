@@ -14,17 +14,17 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: deliveryDate
+                  name: deliverydate
                   type: Date
                   constraints:
                     nullable: false
               - column:
-                  name: plannedTime
+                  name: plannedtime
                   type: TIME
                   constraints:
                     nullable: false
               - column:
-                  name: actualTime
+                  name: actualtime
                   type: TIME
                   constraints:
                     nullable: false

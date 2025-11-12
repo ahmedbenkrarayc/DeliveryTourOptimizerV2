@@ -39,7 +39,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: preferredTimeSlot
+                  name: preferredtimeslot
                   type: VARCHAR(100)
                   constraints:
                     nullable: true

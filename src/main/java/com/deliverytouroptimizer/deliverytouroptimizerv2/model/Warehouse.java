@@ -40,9 +40,11 @@ public class Warehouse {
     @DecimalMax(value = "180.0", message = "Longitude must be <= 180")
     private Double longitude;
 
+    @Column(name = "openingtime")
     @NotNull(message = "Warehouse opening time is required")
     private LocalTime openingTime;
 
+    @Column(name = "closingtime")
     @NotNull(message = "Warehouse closing time is required")
     private LocalTime closingTime;
 
