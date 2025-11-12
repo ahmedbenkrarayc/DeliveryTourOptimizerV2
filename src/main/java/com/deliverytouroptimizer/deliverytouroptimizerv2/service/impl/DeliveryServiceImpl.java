@@ -30,6 +30,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     public DeliveryResponse create(CreateDeliveryRequest request) {
         Tour tour = tourRepository.findById(request.tourId())
                 .orElseThrow(() -> new ResourceNotFoundException("Tour not found id: "+request.tourId()));
+        validateParentExistence(request.tourId());
         Delivery delivery = deliveryMapper.toEntity(request);
         VehicleCapacityValidator.validateVehicleCapacity(tour, delivery, false);
         Delivery saved = deliveryRepository.save(delivery);
@@ -69,5 +70,10 @@ public class DeliveryServiceImpl implements DeliveryService {
                 .stream()
                 .map(deliveryMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    private void validateParentExistence(Long tourId){
+        if(!tourRepository.existsById(tourId))
+            throw new ResourceNotFoundException("Tour not found id : " + tourId);
     }
 }
