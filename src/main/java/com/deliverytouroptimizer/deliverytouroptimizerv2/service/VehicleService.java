@@ -4,6 +4,7 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.request.vehicle.Cre
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.request.vehicle.UpdateVehicleRequest;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.vehicle.VehicleResponse;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.model.enums.VehicleType;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface VehicleService {
     VehicleResponse update(Long id, UpdateVehicleRequest request);
     void delete(Long id);
     VehicleResponse getById(Long id);
-    List<VehicleResponse> getAll();
-    List<VehicleResponse> getByType(VehicleType type);
+    Page<VehicleResponse> getAll(int page, int size);
+    Page<VehicleResponse> getByType(VehicleType type, int page, int size);
     VehicleResponse getByRegistrationNumber(String registrationNumber);
 }

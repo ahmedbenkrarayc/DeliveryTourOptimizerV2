@@ -7,11 +7,10 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.model.enums.VehicleType
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.VehicleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/vehicle")
@@ -26,8 +25,11 @@ public class VehicleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VehicleResponse>> getAll() {
-        return ResponseEntity.ok(vehicleService.getAll());
+    public ResponseEntity<Page<VehicleResponse>> getAll(
+            @RequestParam(defaultValue="0") int page,
+            @RequestParam(defaultValue="10") int size
+    ) {
+        return ResponseEntity.ok(vehicleService.getAll(page, size));
     }
 
     @GetMapping("/{id}")
@@ -41,8 +43,12 @@ public class VehicleController {
     }
 
     @GetMapping("/type/{type}")
-    public ResponseEntity<List<VehicleResponse>> getByType(@PathVariable VehicleType type){
-        return ResponseEntity.ok(vehicleService.getByType(type));
+    public ResponseEntity<Page<VehicleResponse>> getByType(
+            @PathVariable VehicleType type,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return ResponseEntity.ok(vehicleService.getByType(type, page, size));
     }
 
     @GetMapping("/registrationnumber/{number}")

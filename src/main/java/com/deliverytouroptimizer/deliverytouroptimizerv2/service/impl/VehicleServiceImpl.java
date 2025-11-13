@@ -11,6 +11,9 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.model.enums.VehicleType
 import com.deliverytouroptimizer.deliverytouroptimizerv2.repository.VehicleRepository;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.VehicleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,19 +67,17 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<VehicleResponse> getAll() {
-        return vehicleRepository.findAll()
-                .stream()
-                .map(vehicleMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<VehicleResponse> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return vehicleRepository.findAll(pageable)
+                .map(vehicleMapper::toResponse);
     }
 
     @Override
-    public List<VehicleResponse> getByType(VehicleType type) {
-        return vehicleRepository.findByType(type)
-                .stream()
-                .map(vehicleMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<VehicleResponse> getByType(VehicleType type, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return vehicleRepository.findByType(type, pageable)
+                .map(vehicleMapper::toResponse);
     }
 
     @Override
