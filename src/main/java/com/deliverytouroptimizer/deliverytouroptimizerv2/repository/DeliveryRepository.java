@@ -11,11 +11,11 @@ import java.util.Optional;
 
 @Repository
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
-    @EntityGraph(attributePaths = {"tour", "tour.vehicle", "tour.warehouse"})
+    @EntityGraph(attributePaths = {"customer" ,"tour", "tour.vehicle", "tour.warehouse"})
     @NonNull
     Optional<Delivery> findById(@NonNull Long id);
 
-    @EntityGraph(attributePaths = {"tour", "tour.vehicle", "tour.warehouse"})
+    @EntityGraph(attributePaths = {"customer" ,"tour", "tour.vehicle", "tour.warehouse"})
     @NonNull
     List<Delivery> findAll();
 }
