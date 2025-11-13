@@ -19,11 +19,13 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -93,11 +95,17 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public List<DeliveryResponse> getAll() {
-        return deliveryRepository.findAll()
-                .stream()
-                .map(deliveryMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<DeliveryResponse> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return deliveryRepository.findAll(pageable)
+                .map(deliveryMapper::toResponse);
+    }
+
+    @Override
+    public Page<DeliveryResponse> search(String search, Long customerId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return deliveryRepository.searchDeliveries(search, customerId ,pageable)
+                .map(deliveryMapper::toResponse);
     }
 
     private void validateParentExistence(Long tourId, Long customerId){
