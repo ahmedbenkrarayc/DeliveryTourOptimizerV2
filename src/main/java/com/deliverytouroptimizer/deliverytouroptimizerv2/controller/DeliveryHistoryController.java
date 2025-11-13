@@ -18,12 +18,12 @@ public class DeliveryHistoryController {
     private final DeliveryHistoryService deliveryHistoryService;
 
     @PostMapping
-    public ResponseEntity<DeliveryHistoryResponse> create(@Valid @RequestBody CreateDeliveryHistoryRequest request){
+    private ResponseEntity<DeliveryHistoryResponse> create(@Valid @RequestBody CreateDeliveryHistoryRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(deliveryHistoryService.create(request));
     }
 
     @GetMapping
-    public ResponseEntity<List<DeliveryHistoryResponse>> getAll(){
+    private ResponseEntity<List<DeliveryHistoryResponse>> getAll(){
         return ResponseEntity.ok(deliveryHistoryService.getAll());
     }
 
@@ -33,7 +33,7 @@ public class DeliveryHistoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<DeliveryHistoryResponse> delete(@PathVariable Long id){
+    private ResponseEntity<DeliveryHistoryResponse> delete(@PathVariable Long id){
         deliveryHistoryService.delete(id);
         return ResponseEntity.noContent().build();
     }
