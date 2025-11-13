@@ -6,15 +6,16 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.delivery.D
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.DeliveryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/api/delivery")
 @RequiredArgsConstructor
+@Slf4j
 public class DeliveryController {
     private final DeliveryService deliveryService;
 
@@ -23,27 +24,41 @@ public class DeliveryController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ){
-        return ResponseEntity.ok(deliveryService.getAll(page, size));
+        log.info("Fetching all deliveries - page: {}, size: {}", page, size);
+        Page<DeliveryResponse> responsePage = deliveryService.getAll(page, size);
+        log.debug("Fetched {} deliveries", responsePage.getContent().size());
+        return ResponseEntity.ok(responsePage);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DeliveryResponse> getById(@PathVariable Long id){
-        return ResponseEntity.ok(deliveryService.getById(id));
+        log.info("Fetching delivery by id: {}", id);
+        DeliveryResponse response = deliveryService.getById(id);
+        log.debug("Fetched delivery: {}", response);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<DeliveryResponse> create(@Valid @RequestBody CreateDeliveryRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(deliveryService.create(request));
+        log.info("Creating delivery for tourId: {} and customerId: {}", request.tourId(), request.customerId());
+        DeliveryResponse response = deliveryService.create(request);
+        log.debug("Delivery created successfully: {}", response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<DeliveryResponse> update(@PathVariable Long id, @Valid @RequestBody UpdateDeliveryRequest request){
-        return ResponseEntity.ok(deliveryService.update(id, request));
+        log.info("Updating delivery with id: {}", id);
+        DeliveryResponse response = deliveryService.update(id, request);
+        log.debug("Delivery updated successfully: {}", response);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<DeliveryResponse> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        log.info("Deleting delivery with id: {}", id);
         deliveryService.delete(id);
+        log.debug("Delivery deleted successfully with id: {}", id);
         return ResponseEntity.noContent().build();
     }
 
@@ -54,6 +69,9 @@ public class DeliveryController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(deliveryService.search(search, customerId, page, size));
+        log.info("Searching deliveries with search: {}, customerId: {}, page: {}, size: {}", search, customerId, page, size);
+        Page<DeliveryResponse> responsePage = deliveryService.search(search, customerId, page, size);
+        log.debug("Search returned {} deliveries", responsePage.getContent().size());
+        return ResponseEntity.ok(responsePage);
     }
 }

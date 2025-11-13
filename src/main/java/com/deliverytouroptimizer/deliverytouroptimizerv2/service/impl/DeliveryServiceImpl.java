@@ -18,6 +18,7 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.service.validation.Vehi
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class DeliveryServiceImpl implements DeliveryService {
     private final DeliveryRepository deliveryRepository;
     private final TourRepository tourRepository;
@@ -42,34 +44,52 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public DeliveryResponse create(CreateDeliveryRequest request) {
+        log.info("Creating delivery for tourId: {}, customerId: {}", request.tourId(), request.customerId());
         Tour tour = tourRepository.findById(request.tourId())
-                .orElseThrow(() -> new ResourceNotFoundException("Tour not found id: "+request.tourId()));
+                .orElseThrow(() -> {
+                    log.error("Tour not found with id: {}", request.tourId());
+                    return new ResourceNotFoundException("Tour not found id: "+request.tourId());
+                });
         validateParentExistence(request.tourId(), request.customerId());
+
         Delivery delivery = deliveryMapper.toEntity(request);
         VehicleCapacityValidator.validateVehicleCapacity(tour, delivery, false);
+
         Delivery saved = deliveryRepository.save(delivery);
-        return deliveryMapper.toResponse(saved);
+        DeliveryResponse response = deliveryMapper.toResponse(saved);
+
+        log.debug("Delivery created successfully: {}", response);
+        return response;
     }
 
     @Override
     public DeliveryResponse update(Long id, UpdateDeliveryRequest request) {
+        log.info("Updating delivery with id: {}", id);
+
         Tour tour = tourRepository.findById(request.tourId())
-                .orElseThrow(() -> new ResourceNotFoundException("Tour not found id: "+request.tourId()));
+                .orElseThrow(() -> {
+                    log.error("Tour not found with id: {}", request.tourId());
+                    return new ResourceNotFoundException("Tour not found id: "+request.tourId());
+                });
 
         Delivery delivery = deliveryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Delivery not found id: "+id));
+                .orElseThrow(() -> {
+                    log.error("Delivery not found with id: {}", id);
+                    return new ResourceNotFoundException("Delivery not found id: "+id);
+                });
 
         if(delivery.getStatus() != request.status() && request.status() == DeliveryStatus.DELIVERED){
+            log.info("Publishing DeliveryStatusConfirmedEvent for delivery id: {}", id);
             CreateDeliveryHistoryRequest historyRequest =
                     new CreateDeliveryHistoryRequest(request.deliveryDate(), request.plannedTime(), LocalTime.now(), id);
 
             Set<ConstraintViolation<CreateDeliveryHistoryRequest>> violations = validator.validate(historyRequest);
             if (!violations.isEmpty()) {
-                throw new IllegalArgumentException(
-                        violations.stream()
-                                .map(v -> v.getPropertyPath() + ": " + v.getMessage())
-                                .collect(Collectors.joining(", "))
-                );
+                String msg = violations.stream()
+                        .map(v -> v.getPropertyPath() + ": " + v.getMessage())
+                        .collect(Collectors.joining(", "));
+                log.error("Validation failed for delivery history: {}", msg);
+                throw new IllegalArgumentException(msg);
             }
 
             publisher.publishEvent(new DeliveryStatusConfirmedEvent(historyRequest));
@@ -77,41 +97,65 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         VehicleCapacityValidator.validateVehicleCapacity(tour, delivery, true);
         deliveryMapper.updateEntityFromDto(request, delivery);
-        return deliveryMapper.toResponse(delivery);
+        DeliveryResponse response = deliveryMapper.toResponse(delivery);
+
+        log.debug("Delivery updated successfully: {}", response);
+        return response;
     }
 
     @Override
     public void delete(Long id) {
-        if(!deliveryRepository.existsById(id))
+        log.info("Deleting delivery with id: {}", id);
+        if(!deliveryRepository.existsById(id)){
+            log.error("Delivery not found for deletion with id: {}", id);
             throw new ResourceNotFoundException("Delivery not found id: "+id);
+        }
         deliveryRepository.deleteById(id);
+        log.debug("Delivery deleted successfully with id: {}", id);
     }
 
     @Override
     public DeliveryResponse getById(Long id) {
-        return deliveryRepository.findById(id)
+        log.info("Fetching delivery by id: {}", id);
+        DeliveryResponse response = deliveryRepository.findById(id)
                 .map(deliveryMapper::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Delivery not found id: "+id));
+                .orElseThrow(() -> {
+                    log.error("Delivery not found with id: {}", id);
+                    return new ResourceNotFoundException("Delivery not found id: "+id);
+                });
+        log.debug("Fetched delivery: {}", response);
+        return response;
     }
 
     @Override
     public Page<DeliveryResponse> getAll(int page, int size) {
+        log.info("Fetching all deliveries - page: {}, size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
-        return deliveryRepository.findAll(pageable)
+        Page<DeliveryResponse> responsePage = deliveryRepository.findAll(pageable)
                 .map(deliveryMapper::toResponse);
+        log.debug("Fetched {} deliveries", responsePage.getContent().size());
+        return responsePage;
     }
 
     @Override
     public Page<DeliveryResponse> search(String search, Long customerId, int page, int size) {
+        log.info("Searching deliveries for customerId: {} with query: '{}' - page: {}, size: {}", customerId, search, page, size);
         Pageable pageable = PageRequest.of(page, size);
-        return deliveryRepository.searchDeliveries(search, customerId ,pageable)
+        Page<DeliveryResponse> responsePage = deliveryRepository.searchDeliveries(search, customerId ,pageable)
                 .map(deliveryMapper::toResponse);
+        log.debug("Search returned {} deliveries", responsePage.getContent().size());
+        return responsePage;
     }
 
     private void validateParentExistence(Long tourId, Long customerId){
-        if(!tourRepository.existsById(tourId))
+        if(!tourRepository.existsById(tourId)){
+            log.error("Tour not found with id: {}", tourId);
             throw new ResourceNotFoundException("Tour not found id : " + tourId);
-        if(!customerRepository.existsById(customerId))
+        }
+        if(!customerRepository.existsById(customerId)){
+            log.error("Customer not found with id: {}", customerId);
             throw new ResourceNotFoundException("Customer not found id : " + customerId);
+        }
+        log.debug("Parent entities exist - tourId: {}, customerId: {}", tourId, customerId);
     }
 }
