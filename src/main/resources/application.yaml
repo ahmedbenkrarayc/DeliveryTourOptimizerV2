@@ -3,7 +3,7 @@ spring:
     name: deliverytouroptimizerv2
 
   profiles:
-    active: ${ACTIVE_PROFILE}
+    active: test #${ACTIVE_PROFILE}
 
   jpa:
     open-in-view: false

@@ -3,9 +3,8 @@ package com.deliverytouroptimizer.deliverytouroptimizerv2.service;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.request.warehouse.CreateWareHouseRequest;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.request.warehouse.UpdateWareHouseRequest;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.warehouse.WareHouseResponse;
+import org.reactivestreams.Publisher;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 public interface WarehouseService {
     WareHouseResponse create(CreateWareHouseRequest request);
