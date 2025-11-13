@@ -9,11 +9,11 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.model.Warehouse;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.repository.WarehouseRepository;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,10 +59,17 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public List<WareHouseResponse> getAll() {
-        return warehouseRepository.findAll()
-                .stream()
-                .map(warehouseMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<WareHouseResponse> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Warehouse> warehousesPage = warehouseRepository.findAll(pageable);
+
+        return warehousesPage.map(warehouseMapper::toResponse);
+    }
+
+    @Override
+    public Page<WareHouseResponse> search(String search, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return warehouseRepository.searchWarehouses(search, pageable)
+                .map(warehouseMapper::toResponse);
     }
 }

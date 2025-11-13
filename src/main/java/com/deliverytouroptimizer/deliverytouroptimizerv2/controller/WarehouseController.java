@@ -6,6 +6,7 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.warehouse.
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.WarehouseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,21 @@ public class WarehouseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WareHouseResponse>> getAll() {
-        return ResponseEntity.ok(wareHouseService.getAll());
+    public ResponseEntity<Page<WareHouseResponse>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<WareHouseResponse> warehouses = wareHouseService.getAll(page, size);
+        return ResponseEntity.ok(warehouses);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<WareHouseResponse>> search(
+        @RequestParam(required = false) String search,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<WareHouseResponse> result = wareHouseService.search(search, page, size);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{id}")

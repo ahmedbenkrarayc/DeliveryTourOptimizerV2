@@ -3,6 +3,7 @@ package com.deliverytouroptimizer.deliverytouroptimizerv2.service;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.request.warehouse.CreateWareHouseRequest;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.request.warehouse.UpdateWareHouseRequest;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.warehouse.WareHouseResponse;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -15,5 +16,6 @@ public interface WarehouseService {
 
     WareHouseResponse getById(Long id);
 
-    List<WareHouseResponse> getAll();
+    Page<WareHouseResponse> getAll(int page, int size);
+    Page<WareHouseResponse> search(String search, int page, int size);
 }
