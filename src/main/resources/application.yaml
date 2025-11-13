@@ -8,6 +8,13 @@ spring:
   jpa:
     open-in-view: false
 
+  ai:
+    ollama:
+      base-url: ${AI_URL}
+      chat:
+        options:
+          model: ${AI_MODEL}
+
 logging:
   level:
     org:
@@ -17,4 +24,4 @@ server:
   port: 8080
 
 optimizer:
-  type: nearest #nearest / clark
+  type: ai #nearest / clark / ai
