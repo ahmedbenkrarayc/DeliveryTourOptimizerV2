@@ -9,11 +9,11 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.model.Customer;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.repository.CustomerRepository;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,10 +52,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerResponse> getAll() {
-        return customerRepository.findAll()
-                .stream()
-                .map(customerMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<CustomerResponse> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return customerRepository.findAll(pageable)
+                .map(customerMapper::toResponse);
+    }
+
+    @Override
+    public Page<CustomerResponse> search(String search, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return customerRepository.search(search, pageable)
+                .map(customerMapper::toResponse);
     }
 }

@@ -6,11 +6,10 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.customer.C
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/customer")
@@ -19,8 +18,11 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping
-    public ResponseEntity<List<CustomerResponse>> getAll(){
-        return ResponseEntity.ok(customerService.getAll());
+    public ResponseEntity<Page<CustomerResponse>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return ResponseEntity.ok(customerService.getAll(page, size));
     }
 
     @GetMapping("/{id}")
@@ -42,5 +44,14 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> delete(@PathVariable Long id){
         customerService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<CustomerResponse>> search(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(customerService.search(search, page, size));
     }
 }
