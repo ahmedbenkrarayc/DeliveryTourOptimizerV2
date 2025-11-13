@@ -4,6 +4,7 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.request.tour.Create
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.request.tour.UpdateTourRequest;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.delivery.DeliveryResponse;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.tour.TourResponse;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -12,6 +13,6 @@ public interface TourService {
     TourResponse update(Long id, UpdateTourRequest request);
     void delete(Long id);
     TourResponse getById(Long id);
-    List<TourResponse> getAll();
+    Page<TourResponse> getAll(int page, int size);
     List<DeliveryResponse> optimizeTour(Long tourId);
 }

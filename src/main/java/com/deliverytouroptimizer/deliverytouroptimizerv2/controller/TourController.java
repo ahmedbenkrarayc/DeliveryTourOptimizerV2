@@ -7,6 +7,7 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.dto.response.tour.TourR
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.TourService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,11 @@ public class TourController {
     private final TourService tourService;
 
     @GetMapping
-    public ResponseEntity<List<TourResponse>> getAll(){
-        return ResponseEntity.ok(tourService.getAll());
+    public ResponseEntity<Page<TourResponse>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return ResponseEntity.ok(tourService.getAll(page, size));
     }
 
     @GetMapping("/{id}")

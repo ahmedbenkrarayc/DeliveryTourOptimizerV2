@@ -16,6 +16,9 @@ import com.deliverytouroptimizer.deliverytouroptimizerv2.repository.VehicleRepos
 import com.deliverytouroptimizer.deliverytouroptimizerv2.repository.WarehouseRepository;
 import com.deliverytouroptimizer.deliverytouroptimizerv2.service.TourService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,11 +68,10 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourResponse> getAll() {
-        return tourRepository.findAll()
-                .stream()
-                .map(tourMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<TourResponse> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return tourRepository.findAll(pageable)
+                .map(tourMapper::toResponse);
     }
 
     @Override
